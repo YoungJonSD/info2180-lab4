@@ -1,5 +1,4 @@
 <?php
-
 $superheroes = [
   [
       "id" => 1,
@@ -63,10 +62,35 @@ $superheroes = [
   ], 
 ];
 
-?>
+// sanitize 
+$query = isset($_GET['query']) ? htmlspecialchars(trim($_GET['query'])) : '';
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
-<?php endforeach; ?>
-</ul>
+// If a query is provided, search for the superhero
+if (!empty($query)) {
+    $found = false;
+
+    foreach ($superheroes as $superhero) {
+        if (strcasecmp($superhero['alias'], $query) === 0 || strcasecmp($superhero['name'], $query) === 0) {
+            $found = true;
+
+            // Return superhero 
+            echo "<h3>" . htmlspecialchars($superhero['alias']) . "</h3>";
+            echo "<h4>A.K.A " . htmlspecialchars($superhero['name']) . "</h4>";
+            echo "<p>" . htmlspecialchars($superhero['biography']) . "</p>";
+            break;
+        }
+    }
+
+    
+    if (!$found) {
+        echo "<p style='color: red; font-size: 20px;'>SUPERHERO NOT FOUND</p>";
+    }
+} else {
+    
+    echo "<ul>";
+    foreach ($superheroes as $superhero) {
+        echo "<li>" . htmlspecialchars($superhero['alias']) . "</li>";
+    }
+    echo "</ul>";
+}
+?>
